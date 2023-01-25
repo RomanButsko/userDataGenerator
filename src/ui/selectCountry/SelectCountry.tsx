@@ -1,10 +1,12 @@
-import { Theme, useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useState } from "react";
+import { FC, useState } from "react";
+import { ISelectCountry } from "./selectCountry.interface";
+import axios from "axios";
+import { IPatronymic } from "../../services/user/patronymic/patronymic.interface";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -17,26 +19,35 @@ const MenuProps = {
   },
 };
 
-const names = ["Страна 1", "Страна 2", "Страна 3"];
+const names = ["Great Britain", "Azerbaijan", "Russia"];
 
-function getStyles(name: string, country: string[], theme: Theme) {
-  return {
-    fontWeight:
-      country.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
-export const SelectCountry = () => {
-  const theme = useTheme();
-  const [country, setCountry] = useState<string[]>([]);
+export const SelectCountry: FC<ISelectCountry> = ({
+  setLocale,
+  setPatronymic,
+}) => {
+  const [country, setCountry] = useState<string>("Great Britain");
 
   const handleChange = (event: SelectChangeEvent<typeof country>) => {
     const {
       target: { value },
     } = event;
-    setCountry(typeof value === "string" ? value.split(",") : value);
+    setCountry(value);
+  };
+
+  const getPatronymic = async () => {
+    const response = await axios.get<IPatronymic[]>(
+      "https://api.randomdatatools.ru/?count=20&params=FatherName,GenderCode&gender=unset"
+    );
+    setPatronymic(response.data);
+  };
+
+  const handleSelect = async (e: any) => {
+    if (e.target.innerText === "Russia") {
+      await getPatronymic();
+    } else {
+      setPatronymic([]);
+    }
+    setLocale(e.target.innerText);
   };
 
   return (
@@ -44,18 +55,13 @@ export const SelectCountry = () => {
       <FormControl sx={{ m: 1, width: 300 }}>
         <InputLabel>Select</InputLabel>
         <Select
-          multiple
           value={country}
           onChange={handleChange}
           input={<OutlinedInput label="Country" />}
           MenuProps={MenuProps}
         >
           {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, country, theme)}
-            >
+            <MenuItem key={name} value={name} onClick={handleSelect}>
               {name}
             </MenuItem>
           ))}

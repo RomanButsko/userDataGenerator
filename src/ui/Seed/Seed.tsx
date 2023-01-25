@@ -1,14 +1,11 @@
 import { Button, Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { AiOutlineSend } from "react-icons/ai";
-import { faker } from '@faker-js/faker/locale/ru';
+import { ISeed } from "./seed.interface";
 
-const randomName = faker.name.middleName()
-console.log(randomName)
-
-export const Seed = () => {
+export const Seed: FC<ISeed> = ({ sendFormSeed }) => {
   const [num, setNum] = useState<number>(0);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -18,6 +15,9 @@ export const Seed = () => {
     }
   };
 
+  const handleSend = () => {
+    sendFormSeed(num);
+  };
 
   return (
     <Box component="form">
@@ -34,7 +34,11 @@ export const Seed = () => {
           onChange={handleChange}
           value={num}
         />
-        <Button variant="contained" endIcon={<AiOutlineSend />}>
+        <Button
+          variant="contained"
+          endIcon={<AiOutlineSend />}
+          onClick={handleSend}
+        >
           Send
         </Button>
       </Stack>
