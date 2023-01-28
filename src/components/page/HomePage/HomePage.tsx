@@ -4,16 +4,16 @@ import { SelectCountry } from "../../../ui/selectCountry/SelectCountry";
 import SliderInput from "../../../ui/slider/Slider";
 import Stack from "@mui/material/Stack";
 import { UserTable } from "../../UserTable/UserTable";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createUserData } from "../../../utils/createUserData/createUser";
 import { addUsers, updateUsers } from "../../../store/users/userSlice";
 import { useAppDispatch } from "../../../hooks/useDispatch";
-import { faker } from "@faker-js/faker";
+import { faker, UsableLocale } from "@faker-js/faker";
 import { CSVsave } from "../../csv/CSV";
 
 const HomePage = () => {
   const [userData, setUserData] = useState({
-    locale: "",
+    locale: "en_GB" as UsableLocale,
     formSeed: 0,
     country: "Great Britain",
     countRender: 20,
@@ -26,10 +26,9 @@ const HomePage = () => {
 
   const dispatch = useAppDispatch();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     console.log('locale', locale)
-    faker.locale =
-      locale === "Russia" ? "ru" : locale === "Poland" ? "pl" : "en_GB";
+    faker.setLocale(locale)
   }, [locale]);
 
   useEffect(() => {
