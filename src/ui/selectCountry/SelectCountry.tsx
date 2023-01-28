@@ -38,7 +38,15 @@ export const SelectCountry: FC<ISelectCountry> = ({
   const dispatch = useDispatch();
 
   const changeLocation = (data: string) => {
-    let newCountry = data == 'Great Britain' ? 'en_GB' : data == 'Poland' ? 'pl' : data == 'Russia' ? 'ru' : 'en_GB'
+    let newCountry;
+    if (data === 'Great Britain') {
+      newCountry = 'en_GB';
+    } else if (data === 'Poland') {
+      newCountry = 'pl';
+    } else {
+      newCountry = 'ru';
+    }
+    console.log('new', newCountry)
     setLocale(newCountry);
     setCounterRender(20);
     setCountMistakes(0);
