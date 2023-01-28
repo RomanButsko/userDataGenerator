@@ -38,7 +38,7 @@ export const SelectCountry: FC<ISelectCountry> = ({
   const dispatch = useDispatch();
 
   const changeLocation = (data: string) => {
-    setLocale("pl");
+    setLocale(data === 'Great Britain' ? 'en_GB' : data === 'Poland' ? 'pl' : data === 'Russia' ? 'ru' : 'en_GB');
     setCounterRender(20);
     setCountMistakes(0);
     dispatch(updateUsers([]));
