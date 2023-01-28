@@ -27,11 +27,6 @@ const HomePage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log('locale', locale)
-    faker.setLocale(locale)
-  }, [locale]);
-
-  useEffect(() => {
     faker.seed(formSeed);
     const data = createUserData({
       locale,

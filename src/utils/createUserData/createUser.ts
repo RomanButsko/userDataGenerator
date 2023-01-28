@@ -1,4 +1,4 @@
-import { faker, UsableLocale } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 import { IUsers } from "../../types/user.types";
 import { handleMistakes } from "../createMistakes/createMistakes";
 import { ICreateUser } from "./createUser.interface";
@@ -8,9 +8,8 @@ export const createUserData = ({
   countRender,
   countMistakes,
 }: ICreateUser) => {
+  faker.setLocale(locale)
   let country = locale === "ru" ? "Россия" : locale === 'pl' ? 'Poland' : 'Great Britain';
-
-  console.log('createData', locale)
 
   let users: IUsers[] = [];
 
