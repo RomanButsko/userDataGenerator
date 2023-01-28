@@ -4,7 +4,7 @@ import { SelectCountry } from "../../../ui/selectCountry/SelectCountry";
 import SliderInput from "../../../ui/slider/Slider";
 import Stack from "@mui/material/Stack";
 import { UserTable } from "../../UserTable/UserTable";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { createUserData } from "../../../utils/createUserData/createUser";
 import { addUsers, updateUsers } from "../../../store/users/userSlice";
 import { useAppDispatch } from "../../../hooks/useDispatch";
@@ -26,7 +26,8 @@ const HomePage = () => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    console.log('locale', locale)
     faker.locale =
       locale === "Russia" ? "ru" : locale === "Poland" ? "pl" : "en_GB";
   }, [locale]);

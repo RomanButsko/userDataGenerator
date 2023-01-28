@@ -10,6 +10,8 @@ export const createUserData = ({
 }: ICreateUser) => {
   let country = locale === "Russia" ? "Россия" : locale;
 
+  console.log('createData', locale)
+
   let users: IUsers[] = [];
 
   Array.from({ length: countRender }).forEach(() => {
