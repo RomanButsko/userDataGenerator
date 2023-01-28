@@ -80,10 +80,7 @@ const createMistake = [
   },
 ];
 
-export const handleMistakes = (
-  user: IUsers,
-  mistakes: number = 0
-): IUsers => {
+export const handleMistakes = (user: IUsers, mistakes: number = 0): IUsers => {
   for (let i = 0; i < mistakes; i++) {
     if (mistakes === 1) break;
     let lastOperation = mistakes % 1;
@@ -96,9 +93,9 @@ export const handleMistakes = (
     let max = 2;
     if (user[property].length > Limits[property]) max = 1;
     if (user[property].length <= 1) min = 1;
-    user[property] = createMistake[
-      faker.datatype.number({ min, max })
-    ](user[property]);
+    user[property] = createMistake[faker.datatype.number({ min, max })](
+      user[property]
+    );
   }
   return user;
 };

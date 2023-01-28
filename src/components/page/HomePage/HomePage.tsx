@@ -27,6 +27,11 @@ const HomePage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    faker.locale =
+      locale === "Russia" ? "ru" : locale === "Poland" ? "pl" : "en_GB";
+  }, [locale]);
+
+  useEffect(() => {
     faker.seed(formSeed);
     const data = createUserData({
       locale,

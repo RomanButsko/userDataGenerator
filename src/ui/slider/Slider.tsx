@@ -11,7 +11,7 @@ const SliderInput: FC<ISlider> = ({ setCountMistake }) => {
   );
 
   useEffect(() => {
-    if (value !== '') {
+    if (value !== "") {
       const timer = setTimeout(() => {
         setCountMistake(+value);
       }, 500);
@@ -55,7 +55,7 @@ const SliderInput: FC<ISlider> = ({ setCountMistake }) => {
         </Grid>
         <Grid item>
           <Input
-            value={value === 0 ? '' : value}
+            value={value === 0 ? "" : value}
             size="small"
             onChange={handleInputChange}
             onBlur={handleBlur}

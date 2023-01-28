@@ -8,18 +8,8 @@ export const createUserData = ({
   countRender,
   countMistakes,
 }: ICreateUser) => {
-  let country = "";
-  if (locale === "Russia") {
-    country = "Россия";
-    faker.locale = "ru";
-  } else if (locale === "Poland") {
-    country = "Poland";
-    faker.locale = "pl";
-  } else {
-    country = "Great Britain";
-    faker.locale = "en_GB";
-  }
-  
+  let country = locale === "Russia" ? "Россия" : locale;
+
   let users: IUsers[] = [];
 
   Array.from({ length: countRender }).forEach(() => {
