@@ -39,10 +39,10 @@ export const SelectCountry: FC<ISelectCountry> = ({
 
   const handleSelect = async (e: any) => {
     let data = e.target.innerText
+    setLocale(data === names[0] ? 'en_GB' : data === names[1] ? 'pl' : data === names[2] ? 'ru' : "");
     setCounterRender(20);
     setCountMistakes(0);
     dispatch(updateUsers([]));
-    setLocale(data === names[0] ? 'en_GB' : data === names[1] ? 'pl' : data === names[2] ? 'ru' : "");
   };
 
   return (
