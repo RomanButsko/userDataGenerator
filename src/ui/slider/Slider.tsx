@@ -11,7 +11,7 @@ const SliderInput: FC<ISlider> = ({ setCountMistake }) => {
   );
 
   useEffect(() => {
-    if (value !== 0) {
+    if (value !== '') {
       const timer = setTimeout(() => {
         setCountMistake(+value);
       }, 500);
@@ -28,7 +28,7 @@ const SliderInput: FC<ISlider> = ({ setCountMistake }) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let currentValue = Number(event.target.value);
     if (currentValue > 1000) currentValue = 1000;
-    setValue(event.target.value === "" ? "" : currentValue);
+    setValue(event.target.value === "" ? 0 : currentValue);
   };
   const handleBlur = (event: any) => {
     if (value < 0) setValue(0);

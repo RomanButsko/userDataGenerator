@@ -29,7 +29,6 @@ const createMistake = [
       min: 0,
       max: data.length - 2,
     });
-    console.log("delete", data);
     return data.substring(0, randomLetter) + data.substring(randomLetter + 1);
   },
   (data: string) => {
@@ -57,7 +56,7 @@ const createMistake = [
     } else {
       let randomPlace = faker.datatype.number({
         min: 0,
-        max: data.length - 1,
+        max: data.length,
       });
       let newLetter = faker.datatype.number({
         min: 0,
@@ -82,7 +81,7 @@ const createMistake = [
 ];
 
 export const handleMistakes = (
-  person: IUsers,
+  user: IUsers,
   mistakes: number = 0
 ): IUsers => {
   for (let i = 0; i < mistakes; i++) {
@@ -95,11 +94,11 @@ export const handleMistakes = (
     const property = randomProperty();
     let min = 0;
     let max = 2;
-    if (person[property].length > Limits[property]) max = 1;
-    if (person[property].length <= 1) min = 1;
-    person[property] = createMistake[
+    if (user[property].length > Limits[property]) max = 1;
+    if (user[property].length <= 1) min = 1;
+    user[property] = createMistake[
       faker.datatype.number({ min, max })
-    ](person[property]);
+    ](user[property]);
   }
-  return person;
+  return user;
 };
