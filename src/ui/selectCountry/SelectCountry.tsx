@@ -7,7 +7,6 @@ import { FC } from "react";
 import { ISelectCountry } from "./selectCountry.interface";
 import { useDispatch } from "react-redux";
 import { updateUsers } from "../../store/users/userSlice";
-import { UsableLocale } from '@faker-js/faker';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -43,7 +42,7 @@ export const SelectCountry: FC<ISelectCountry> = ({
     setCounterRender(20);
     setCountMistakes(0);
     dispatch(updateUsers([]));
-    setLocale(data === names[0] ? 'en_GB' : data === names[1] ? 'pl' : data === names[2] ? 'ru' : "" as UsableLocale);
+    setLocale(data === names[0] ? 'en_GB' : data === names[1] ? 'pl' : data === names[2] ? 'ru' : "");
   };
 
   return (

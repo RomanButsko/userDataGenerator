@@ -8,12 +8,12 @@ import { useEffect, useState } from "react";
 import { createUserData } from "../../../utils/createUserData/createUser";
 import { addUsers, updateUsers } from "../../../store/users/userSlice";
 import { useAppDispatch } from "../../../hooks/useDispatch";
-import { faker, UsableLocale } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 import { CSVsave } from "../../csv/CSV";
 
 const HomePage = () => {
   const [userData, setUserData] = useState({
-    locale: "en_GB" as UsableLocale,
+    locale: "en_GB",
     formSeed: 0,
     country: "Great Britain",
     countRender: 20,

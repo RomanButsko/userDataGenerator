@@ -8,6 +8,7 @@ export const createUserData = ({
   countRender,
   countMistakes,
 }: ICreateUser) => {
+  console.log('locale', locale)
   faker.setLocale(locale)
   let country = locale === "ru" ? "Россия" : locale === 'pl' ? 'Poland' : 'Great Britain';
 
