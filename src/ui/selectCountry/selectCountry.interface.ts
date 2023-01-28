@@ -1,5 +1,7 @@
-import { IPatronymic } from "./../../services/user/patronymic/patronymic.interface";
 export interface ISelectCountry {
   setLocale: (value: string) => void;
-  setPatronymic: (value: IPatronymic[]) => void;
+  country: string;
+  setCountry: (value: string) => void;
+  setCounterRender: (value: number) => void;
+  setCountMistakes: (value: number) => void;
 }

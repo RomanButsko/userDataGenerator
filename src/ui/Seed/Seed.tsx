@@ -2,7 +2,7 @@ import { Button, Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { ChangeEvent, FC, useState } from "react";
-import { AiOutlineSend } from "react-icons/ai";
+import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import { ISeed } from "./seed.interface";
 
 export const Seed: FC<ISeed> = ({ sendFormSeed }) => {
@@ -10,13 +10,15 @@ export const Seed: FC<ISeed> = ({ sendFormSeed }) => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const regex = /^[0-9\b]+$/;
-    if (e.target.value === "" || regex.test(e.target.value)) {
+    sendFormSeed(Number(e.target.value));
+    if (e.target.value === "" || regex.test(e.target.value))
       setNum(Number(e.target.value));
-    }
   };
 
   const handleSend = () => {
-    sendFormSeed(num);
+    let newSeed = Math.round(Math.random() * (1000 - 1) + 1);
+    sendFormSeed(newSeed);
+    setNum(newSeed);
   };
 
   return (
@@ -36,10 +38,10 @@ export const Seed: FC<ISeed> = ({ sendFormSeed }) => {
         />
         <Button
           variant="contained"
-          endIcon={<AiOutlineSend />}
+          endIcon={<GiPerspectiveDiceSixFacesRandom />}
           onClick={handleSend}
         >
-          Send
+          Random
         </Button>
       </Stack>
     </Box>

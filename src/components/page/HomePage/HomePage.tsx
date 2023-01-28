@@ -4,58 +4,100 @@ import { SelectCountry } from "../../../ui/selectCountry/SelectCountry";
 import SliderInput from "../../../ui/slider/Slider";
 import Stack from "@mui/material/Stack";
 import { UserTable } from "../../UserTable/UserTable";
-import { useState } from "react";
-import { IPatronymic } from "../../../services/user/patronymic/patronymic.interface";
-// import seedrandom from 'seedrandom'
-
-// const myrng = (value: number) => {
-//     let res = seedrandom(String(value));
-//     console.log(res())
-// }
-// faker.seed(123);
-// let phone = faker.phone.number()
-// const fullName = faker.fake({{name.lastName}} {{name.firstName}} {{name.jobTitle}})
-// console.log(phone)
-// console.log(phone.split(''))
-// console.log(phone)
-
-// console.log('1', myrng(1));                // Always 0.2694488477791326
-// console.log('2', myrng(2));                // Always 0.7153687886990808
-// console.log('3', myrng(3));                // Always 0.8486474710186808
-// console.log('4', myrng(4));                // Always 0.35820882139702814
-// console.log('1', myrng(1));                // Always 0.2694488477791326
+import { useEffect, useState } from "react";
+import { createUserData } from "../../../utils/createUserData/createUser";
+import { addUsers, updateUsers } from "../../../store/users/userSlice";
+import { useAppDispatch } from "../../../hooks/useDispatch";
+import { faker } from "@faker-js/faker";
+import { CSVsave } from "../../csv/CSV";
 
 const HomePage = () => {
-  const [locale, setLocale] = useState<string>("");
-  const [patronymic, setPatronymic] = useState<IPatronymic[]>([]);
-  const [formSeed, sendFormSeed] = useState<number>();
+  const [userData, setUserData] = useState({
+    locale: "",
+    formSeed: 0,
+    country: "Great Britain",
+    countRender: 20,
+    countMistakes: 0,
+    render: false,
+  });
+
+  const { locale, formSeed, country, countRender, countMistakes, render } =
+    userData;
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    faker.seed(formSeed);
+    const data = createUserData({
+      locale,
+      countRender,
+      countMistakes,
+    });
+    dispatch(updateUsers(data));
+  }, [countMistakes, locale, formSeed, country]);
+
+  useEffect(() => {
+    if (render) {
+      let newCountRender = 10;
+      const data = createUserData({
+        locale,
+        countRender: newCountRender,
+        countMistakes,
+      });
+      dispatch(addUsers(data));
+    }
+  }, [render]);
+
   return (
     <>
       <Box
         sx={{
           bgcolor: "rgba(218,213,213, 0.3)",
-          height: "100vh",
+          minHeight: "100%",
           paddingTop: "30px",
         }}
       >
-        {/* <Container maxWidth="lg"> */}
         <Stack
           direction="row"
           spacing={7}
           justifyContent="center"
           alignItems="center"
         >
-          <SelectCountry setLocale={setLocale} setPatronymic={setPatronymic} />
-          <SliderInput />
-          <Seed sendFormSeed={sendFormSeed} />
+          <SelectCountry
+            setCountry={(value) =>
+              setUserData((prev) => ({ ...prev, country: value }))
+            }
+            country={country}
+            setLocale={(value) =>
+              setUserData((prev) => ({ ...prev, locale: value }))
+            }
+            setCounterRender={(value) =>
+              setUserData((prev) => ({ ...prev, countRender: value }))
+            }
+            setCountMistakes={(value) =>
+              setUserData((prev) => ({ ...prev, countMistakes: value }))
+            }
+          />
+          <SliderInput
+            setCountMistake={(value) =>
+              setUserData((prev) => ({ ...prev, countMistakes: value }))
+            }
+          />
+          <Seed
+            sendFormSeed={(value) =>
+              setUserData((prev) => ({ ...prev, formSeed: value }))
+            }
+          />
         </Stack>
-        {/* </Container> */}
         <Container sx={{ marginTop: "40px" }}>
           <UserTable
             locale={locale}
-            patronymic={patronymic}
-            formSeed={formSeed}
+            country={country}
+            setCountRender={(value) =>
+              setUserData((prev) => ({ ...prev, render: value }))
+            }
           />
+          <CSVsave />
         </Container>
       </Box>
     </>

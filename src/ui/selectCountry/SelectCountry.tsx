@@ -3,10 +3,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { ISelectCountry } from "./selectCountry.interface";
-import axios from "axios";
-import { IPatronymic } from "../../services/user/patronymic/patronymic.interface";
+import { useDispatch } from "react-redux";
+import { updateUsers } from "../../store/users/userSlice";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -19,14 +19,15 @@ const MenuProps = {
   },
 };
 
-const names = ["Great Britain", "Azerbaijan", "Russia"];
+const names = ["Great Britain", "Poland", "Russia"];
 
 export const SelectCountry: FC<ISelectCountry> = ({
   setLocale,
-  setPatronymic,
+  country,
+  setCountry,
+  setCounterRender,
+  setCountMistakes,
 }) => {
-  const [country, setCountry] = useState<string>("Great Britain");
-
   const handleChange = (event: SelectChangeEvent<typeof country>) => {
     const {
       target: { value },
@@ -34,19 +35,12 @@ export const SelectCountry: FC<ISelectCountry> = ({
     setCountry(value);
   };
 
-  const getPatronymic = async () => {
-    const response = await axios.get<IPatronymic[]>(
-      "https://api.randomdatatools.ru/?count=20&params=FatherName,GenderCode&gender=unset"
-    );
-    setPatronymic(response.data);
-  };
+  const dispatch = useDispatch();
 
   const handleSelect = async (e: any) => {
-    if (e.target.innerText === "Russia") {
-      await getPatronymic();
-    } else {
-      setPatronymic([]);
-    }
+    setCounterRender(20);
+    setCountMistakes(0);
+    dispatch(updateUsers([]));
     setLocale(e.target.innerText);
   };
 

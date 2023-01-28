@@ -4,63 +4,28 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { faker } from "@faker-js/faker";
-import { FC } from "react";
-import { ILocale, IUsers } from "./userTable.interface";
-import { IPatronymic } from "../../services/user/patronymic/patronymic.interface";
+import { FC, useCallback, useEffect } from "react";
+import { ILocale } from "./userTable.interface";
+import { useAppSelector } from "../../hooks/useSelector";
+import { selectUsers } from "../../store/users/userSlice";
 
-function sendSeed(
-  seed: number | null = null,
-  locale: string,
-  middleN: IPatronymic | null = null
-) {
-  let country = "";
-  if (locale === "Russia") {
-    country = "Россия";
-    faker.locale = "ru";
-  } else if (locale === "Azerbaijan") {
-    country = "Azerbaijan";
-    faker.locale = "uk";
-  } else {
-    country = "Great Britain";
-    faker.locale = "en_GB";
-  }
+export const UserTable: FC<ILocale> = ({ locale, setCountRender, country }) => {
+  const users = useAppSelector(selectUsers);
 
-  if (seed) {
-    faker.seed(seed);
-  }
+  const handleScroll = useCallback(() => {
+    const { scrollHeight, clientHeight, scrollTop } = document.documentElement;
+    scrollHeight - clientHeight - 1 <= scrollTop
+      ? setCountRender(true)
+      : setCountRender(false);
+  }, []);
 
-  const userData = {
-    id: faker.datatype.number({ max: 100000 }),
-    fullName: middleN
-      ? faker.name.fullName({
-          sex: middleN.GenderCode === "man" ? "male" : "female",
-        })
-      : faker.name.fullName(),
-    middleName: middleN ? middleN.FatherName : faker.name.middleName(),
-    address: {
-      country,
-      city: faker.address.city(),
-      street: faker.address.secondaryAddress(),
-      postCode: faker.address.zipCode(),
-      houseAdress: faker.address.streetAddress(),
-    },
-    phone: faker.phone.number(),
-  };
-  return userData;
-}
-
-export const UserTable: FC<ILocale> = ({ locale, patronymic, formSeed }) => {
-  let user: IUsers[] = [];
-  console.log("l", locale);
-  Array.from({ length: 20 }).forEach(() => {
-    const data = sendSeed(null, locale, patronymic.pop());
-    user.push(data);
-  });
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -82,25 +47,33 @@ export const UserTable: FC<ILocale> = ({ locale, patronymic, formSeed }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {user.map((user, index) => (
+          {users.map((user, index) => (
             <TableRow
-              key={user.id}
+              key={index}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <TableCell component="th" scope="row">{index + 1}</TableCell>
-              <TableCell component="th" scope="row">{user.id}</TableCell>
-              {locale !== "Azerbaijan" ? (
+              <TableCell component="th" scope="row">
+                {index + 1}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                {user.id}
+              </TableCell>
+              {country === "Great Britain" ? (
                 <>
                   <TableCell align="center">{user.fullName}</TableCell>
                   <TableCell align="center">{user.middleName}</TableCell>
                 </>
               ) : (
                 <>
-                  <TableCell align="center">{user.fullName.split(" ")[0]}</TableCell>
-                  <TableCell align="center">{user.fullName.split(" ")[1]}</TableCell>
+                  <TableCell align="center">
+                    {user.fullName.split(" ")[0]}
+                  </TableCell>
+                  <TableCell align="center">
+                    {user.fullName.split(" ")[1]}
+                  </TableCell>
                 </>
               )}
-              <TableCell align="center">{`${user.address.country}, ${user.address.city}, ${user.address.houseAdress}, ${user.address.street}, - ${user.address.postCode}`}</TableCell>
+              <TableCell align="center">{`${user.address}`}</TableCell>
               <TableCell align="center">{user.phone}</TableCell>
             </TableRow>
           ))}

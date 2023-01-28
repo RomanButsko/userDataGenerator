@@ -1,13 +1,25 @@
 import { Input, Slider } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import { ISlider } from "./slider.interface";
 
-const SliderInput = () => {
+const SliderInput: FC<ISlider> = ({ setCountMistake }) => {
   const [value, setValue] = useState<number | string | Array<number | string>>(
     0
   );
+
+  useEffect(() => {
+    if (value !== 0) {
+      const timer = setTimeout(() => {
+        setCountMistake(+value);
+      }, 500);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [value]);
 
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     setValue(newValue);
@@ -15,18 +27,12 @@ const SliderInput = () => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let currentValue = Number(event.target.value);
-    if (currentValue > 1000) {
-      currentValue = 1000;
-    }
+    if (currentValue > 1000) currentValue = 1000;
     setValue(event.target.value === "" ? "" : currentValue);
   };
-
-  const handleBlur = () => {
-    if (value < 0) {
-      setValue(0);
-    } else if (value > 10) {
-      setValue(10);
-    }
+  const handleBlur = (event: any) => {
+    if (value < 0) setValue(0);
+    else if (value > 10) setValue(event.target.value);
   };
 
   return (
@@ -49,14 +55,14 @@ const SliderInput = () => {
         </Grid>
         <Grid item>
           <Input
-            value={value}
+            value={value === 0 ? '' : value}
             size="small"
             onChange={handleInputChange}
             onBlur={handleBlur}
             inputProps={{
               step: 0.5,
               min: 0,
-              max: 10,
+              max: 1000,
               type: "number",
               "aria-labelledby": "input-slider",
             }}
