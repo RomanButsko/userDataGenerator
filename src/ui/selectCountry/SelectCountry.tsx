@@ -38,24 +38,15 @@ export const SelectCountry: FC<ISelectCountry> = ({
   const dispatch = useDispatch();
 
   const changeLocation = (data: string) => {
-    let newCountry;
-    if (data === 'Great Britain') {
-      newCountry = 'en_GB';
-    } else if (data === 'Poland') {
-      newCountry = 'pl';
-    } else {
-      newCountry = 'ru';
-    }
-    console.log('new', newCountry)
+ 
+  }
+
+  const handleSelect = (name: string) => {
+    let newCountry = name === 'Great Britain' ? 'en_GB' : name === 'Poland' ? 'pl' : name === 'Russia' ? 'ru' : 'en_GB';
     setLocale(newCountry);
     setCounterRender(20);
     setCountMistakes(0);
     dispatch(updateUsers([]));
-  }
-
-  const handleSelect = (e: any) => {
-    let data = e.target.innerText
-    changeLocation(data)
   };
 
   return (
@@ -69,7 +60,7 @@ export const SelectCountry: FC<ISelectCountry> = ({
           MenuProps={MenuProps}
         >
           {names.map((name) => (
-            <MenuItem key={name} value={name} onClick={handleSelect}>
+            <MenuItem key={name} value={name} onClick={() => handleSelect(name)}>
               {name}
             </MenuItem>
           ))}
